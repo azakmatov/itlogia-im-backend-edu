@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports: [27017:27017]
+    volumes: [mongo-data:/data/db]
+
+
+  backend:
+    image: azakmatov/itlogia-im-backend-edu:1.0.1
+    container_name: im-backend
+    volumes: [.:/backend]
+    ports: [3000:3000]
+    environment: [MONGO_URI=mongodb://mongo:27017]
+    depends_on: [mongo]
+    command: sh -c "migrate-mongo up && npm start"
+
+volumes:
+  mongo-data:
